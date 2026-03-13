@@ -2,15 +2,14 @@ package liftp
 
 import (
 	"errors"
-	"runtime"
-
-	"github.com/gen2brain/dlgs"
-
 	"fmt"
 	"os"
 	"os/exec"
 	"os/user"
+	"runtime"
 	"strings"
+
+	"github.com/gen2brain/dlgs"
 )
 
 func IsRootPower() bool {
@@ -33,6 +32,10 @@ func LiftPrivilege(why string) error {
 
 	if IsRootPower() {
 		return nil
+	}
+
+	if runtime.GOOS == "darwin" {
+		return liftPrivilegeMacOS(why)
 	}
 
 	password, ok, err := dlgs.Password("需要特权执行相关操作", why)
